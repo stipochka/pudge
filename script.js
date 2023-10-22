@@ -1,7 +1,9 @@
 var GAME = {
     width: 1257,
     height: 760,
+    is_game: true,
 }
+
 
 var canvas = document.getElementById("canvas");
 var canvasWidth = GAME.width;
@@ -46,6 +48,15 @@ var GROUND = {
     coordX: 0,
     coordY: 0,
     model: ground,
+}
+
+var TOWER = {
+    width: 200,
+    height: 200,
+    coordX: 1080,
+    coordY: 250,
+    model: tower,
+    HP: 6,
 }
 
 var CREEP = {
@@ -101,6 +112,39 @@ function suma(obj) {
     }
 }
 
+function niceHook(obj) {
+    var hookLeft = HOOK.coordX > obj.coordX;
+    var hookRight = HOOK.coordX + HOOK.width < obj.coordX + obj.width;
+    var hookTop = HOOK.coordY + HOOK.height > obj.coordY;
+    var hookBottom = HOOK.coordY < obj.coordY + obj.height;
+    obj.is_dead = (hookLeft && hookRight && hookTop && hookBottom);
+}
+
+function initEventsListeners() {
+    window.addEventListener("click", clickmouse);
+}
+
+function clickmouse(event) {
+    HOOK.disX = event.clientX;
+    HOOK.disY = event.clientY;
+    if (HOOK.dx === 0 && HOOK.dy === 0){
+        HOOK.dx = Math.round(((HOOK.disX - HOOK.coordX) / (((Math.abs(HOOK.disX - HOOK.coordX)  2) + Math.abs(HOOK.disY - HOOK.coordY)  2)  (1 / 2)/ HOOK.height * 4)));
+        HOOK.dy = Math.abs(Math.round(((HOOK.disY - HOOK.coordY) / (((Math.abs(HOOK.disX - HOOK.coordX)  2) + Math.abs(HOOK.disY - HOOK.coordY)  2)  (1 / 2) / HOOK.height * 4))));
+    }    
+}
+
+function removeObject(obj) {
+    obj.coordX = obj.startx;
+    obj.coordY = obj.starty;
+    obj.is_dead = false;
+    HOOK.dx = 0;
+    HOOK.dy = 0;
+    HOOK.coordX = HOOK.startx;
+    HOOK.coordY = HOOK.starty;
+    HOOK.kiilCount += 1;
+    console.log(HOOK.kiilCount);
+}
+
 function runningCreep() {
     suma(CREEP);
     suma(CREEP2);
@@ -115,7 +159,12 @@ function runningCreep() {
 
 
 function play() {
-    runningCreep();
-    requestAnimationFrame(play);
+    runningObj();
+    if (GAME.is_game === true) {
+        requestAnimationFrame(play);
+    }
 }
+
+initEventsListeners();
 play();
+
