@@ -157,15 +157,52 @@ function removeObject(obj) {
     console.log(HOOK.kiilCount);
 }
 
-function runningCreep() {
+function runningObj() {
+    canvasContext.clearRect(0, 0, 1257, 760);
+    if (HOOK.coordX + HOOK.dx > GAME.width || HOOK.coordY + HOOK.dy > GAME.height || HOOK.coordX + HOOK.dx <0) {
+        HOOK.coordX = HOOK.startx;
+        HOOK.coordY = HOOK.starty;
+        HOOK.dx = 0;
+        HOOK.dy = 0;
+        draw(HOOK);
+    }
+    
+    HOOK.coordX += HOOK.dx;
+    HOOK.coordY += HOOK.dy;    
     suma(CREEP);
     suma(CREEP2);
-    canvasContext.clearRect(0, 0, 1257, 760);
     draw(GROUND);
+    draw(TOWER);
     draw(PUDGE);
     draw(HOOK);
+    hpLeft();
     draw(CREEP);
+    niceHook(CREEP);
+    if (CREEP.is_dead === true) {
+         
+        if (CREEP.starty < 350) {
+            CREEP.starty += 50;
+        }
+        else {
+            CREEP.starty = 250;
+        }
+        removeObject(CREEP);
+
+    }
+    
     draw(CREEP2);
+    niceHook(CREEP2);
+    if (CREEP2.is_dead === true) {
+        
+        if (CREEP2.starty > 300) {
+            CREEP2.starty -= 50;
+        }
+        else {
+            CREEP2.starty = 450;
+        }
+        removeObject(CREEP2);
+
+    }
 }
 
 
