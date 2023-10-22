@@ -24,6 +24,12 @@ pudge.onload = function () {
     canvasContext.drawImage(pudge, 450, 0);
 }
 
+var tower = new Image();
+tower.src = "img/towe.png";
+tower.onload = function () {
+    canvasContext.drawImage(tower, 1080, 250);
+}
+
 var hook = new Image();
 hook.src = "img/hook.png";
 hook.onload = function () {
@@ -69,6 +75,7 @@ var CREEP = {
     starty: 250,
     startx: 0,
     model: creep,
+    path: "sound/phraze.mp3",
     is_dead: false,
 }
 
@@ -97,6 +104,7 @@ var CREEP2 = {
     startx: 0,
     starty: 450,
     model: creep2,
+    path: "sound/Creep2.mp3",
     is_dead: false,
 }
 
@@ -120,8 +128,17 @@ function suma(obj) {
         obj.coordX = obj.startx;
         obj.coordY = obj.starty;
         TOWER.HP -= 1;
+        var hit = new Audio();
+        hit.src = 'sound/hit.mp3';
+        hit.play();
         console.log(TOWER.HP);
     }
+}
+
+function playSound(obj) {
+    var phraze = new Audio();
+    phraze.src = obj.path;
+    phraze.play();
 }
 
 function niceHook(obj) {
@@ -175,6 +192,15 @@ function hpLeft() {
     if (TOWER.HP < 1) {
         GAME.is_game = false
     } 
+}
+
+function hpLeft() {
+    canvasContext.fillStyle = "white";
+    canvasContext.font = "bold 16px Arial";
+    canvasContext.fillText("HP left: " + TOWER.HP, 1150, 235);
+    if (TOWER.HP < 1) {
+        GAME.is_game = false
+    }
 }
 
 function play() {
