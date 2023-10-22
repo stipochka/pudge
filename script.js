@@ -4,7 +4,6 @@ var GAME = {
     is_game: true,
 }
 
-
 var canvas = document.getElementById("canvas");
 var canvasWidth = GAME.width;
 var canvasHeight = GAME.height;
@@ -24,10 +23,16 @@ pudge.onload = function () {
     canvasContext.drawImage(pudge, 450, 0);
 }
 
+var tower = new Image();
+tower.src = "img/towe.png";
+tower.onload = function () {
+    canvasContext.drawImage(tower, 1080, 250);
+}
+
 var hook = new Image();
 hook.src = "img/hook.png";
 hook.onload = function () {
-    canvasContext.drawImage(hook, 500, 35);
+    canvasContext.drawImage(hook, 520, 55);
 }
 
 var creep = new Image();
@@ -69,6 +74,7 @@ var CREEP = {
     starty: 250,
     startx: 0,
     model: creep,
+    path: "sound/phraze.mp3",
     is_dead: false,
 }
 
@@ -84,7 +90,7 @@ var HOOK = {
     disX: 0,
     disY: 0,
     model: hook,
-    kiilCount: 0,
+    killCount: 0,
 }
 
 var CREEP2 = {
@@ -97,6 +103,7 @@ var CREEP2 = {
     startx: 0,
     starty: 450,
     model: creep2,
+    path: "sound/Creep2.mp3",
     is_dead: false,
 }
 
@@ -120,10 +127,18 @@ function suma(obj) {
         obj.coordX = obj.startx;
         obj.coordY = obj.starty;
         TOWER.HP -= 1;
+        var hit = new Audio();
+        hit.src = 'sound/hit.mp3';
+        hit.play();
         console.log(TOWER.HP);
     }
 }
 
+function playSound(obj) {
+    var phraze = new Audio();
+    phraze.src = obj.path;
+    phraze.play();
+}
 
 function niceHook(obj) {
     var hookLeft = HOOK.coordX > obj.coordX;
@@ -140,10 +155,10 @@ function initEventsListeners() {
 function clickmouse(event) {
     HOOK.disX = event.clientX;
     HOOK.disY = event.clientY;
-    if (HOOK.dx === 0 && HOOK.dy === 0){
-        HOOK.dx = Math.round(((HOOK.disX - HOOK.coordX) / (((Math.abs(HOOK.disX - HOOK.coordX)  2) + Math.abs(HOOK.disY - HOOK.coordY)  2)  (1 / 2)/ HOOK.height * 4)));
+    if (HOOK.dx === 0 && HOOK.dy === 0) {
+        HOOK.dx = Math.round(((HOOK.disX - HOOK.coordX) / (((Math.abs(HOOK.disX - HOOK.coordX)  2) + Math.abs(HOOK.disY - HOOK.coordY)  2)  (1 / 2) / HOOK.height * 4)));
         HOOK.dy = Math.abs(Math.round(((HOOK.disY - HOOK.coordY) / (((Math.abs(HOOK.disX - HOOK.coordX)  2) + Math.abs(HOOK.disY - HOOK.coordY)  2)  (1 / 2) / HOOK.height * 4))));
-    }    
+    }
 }
 
 function removeObject(obj) {
@@ -154,33 +169,33 @@ function removeObject(obj) {
     HOOK.dy = 0;
     HOOK.coordX = HOOK.startx;
     HOOK.coordY = HOOK.starty;
-    HOOK.kiilCount += 1;
-    console.log(HOOK.kiilCount);
 }
 
 function runningObj() {
     canvasContext.clearRect(0, 0, 1257, 760);
-    if (HOOK.coordX + HOOK.dx > GAME.width || HOOK.coordY + HOOK.dy > GAME.height || HOOK.coordX + HOOK.dx <0) {
+    if (HOOK.coordX + HOOK.dx > GAME.width  HOOK.coordY + HOOK.dy > GAME.height  HOOK.coordX + HOOK.dx < 0) {
         HOOK.coordX = HOOK.startx;
         HOOK.coordY = HOOK.starty;
         HOOK.dx = 0;
         HOOK.dy = 0;
         draw(HOOK);
     }
-    
-    HOOK.coordX += HOOK.dx;
-    HOOK.coordY += HOOK.dy;    
+  
+  HOOK.coordX += HOOK.dx;
+    HOOK.coordY += HOOK.dy;
     suma(CREEP);
     suma(CREEP2);
     draw(GROUND);
     draw(TOWER);
     draw(PUDGE);
     draw(HOOK);
+    drawLin();
     hpLeft();
+    killCnt();
     draw(CREEP);
     niceHook(CREEP);
     if (CREEP.is_dead === true) {
-         
+
         if (CREEP.starty < 350) {
             CREEP.starty += 50;
         }
@@ -188,20 +203,26 @@ function runningObj() {
             CREEP.starty = 250;
         }
         removeObject(CREEP);
+        playSound(CREEP);
+        HOOK.killCount += 1;
 
     }
-    
+
     draw(CREEP2);
     niceHook(CREEP2);
     if (CREEP2.is_dead === true) {
-        
+
         if (CREEP2.starty > 300) {
             CREEP2.starty -= 50;
         }
         else {
             CREEP2.starty = 450;
         }
+        playSound(CREEP2);
+        HOOK.killCount += 1;
         removeObject(CREEP2);
+
+        console.log(HOOK.killCount);
 
     }
 }
@@ -226,6 +247,15 @@ function killCnt() {
     canvasContext.fillText("Kills left: " + (10 - HOOK.killCount), 1000, 235);
     if (HOOK.killCount > 9) {
         GAME.is_game = false;
+    }
+}
+
+function hpLeft() {
+    canvasContext.fillStyle = "white";
+    canvasContext.font = "bold 16px Arial";
+    canvasContext.fillText("HP left: " + TOWER.HP, 1150, 235);
+    if (TOWER.HP < 1) {
+        GAME.is_game = false
     }
 }
 
@@ -286,4 +316,3 @@ function textLose() {
 
 initEventsListeners();
 play();
-
