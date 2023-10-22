@@ -124,6 +124,7 @@ function suma(obj) {
     }
 }
 
+
 function niceHook(obj) {
     var hookLeft = HOOK.coordX > obj.coordX;
     var hookRight = HOOK.coordX + HOOK.width < obj.coordX + obj.width;
@@ -205,13 +206,82 @@ function runningObj() {
     }
 }
 
+function drawLin() {
+    canvasContext.fillStyle = 'grey';
+    canvasContext.beginPath();
+    canvasContext.moveTo(HOOK.startx + HOOK.width - 20, HOOK.starty);
+    if (HOOK.dx > 0) {
+        canvasContext.lineTo(HOOK.coordX + HOOK.width - 20, HOOK.coordY);
+    }
+    else {
+        canvasContext.lineTo(HOOK.coordX + HOOK.width - 10, HOOK.coordY);
+    }
 
+    canvasContext.stroke();
+}
+
+function killCnt() {
+    canvasContext.fillStyle = "red";
+    canvasContext.font = "bold 16px Arial";
+    canvasContext.fillText("Kills left: " + (10 - HOOK.killCount), 1000, 235);
+    if (HOOK.killCount > 9) {
+        GAME.is_game = false;
+    }
+}
 
 function play() {
     runningObj();
     if (GAME.is_game === true) {
         requestAnimationFrame(play);
     }
+
+    else {
+        if (HOOK.killCount > 9) {
+            drawWin();
+        }
+        else {
+            drawLose();
+        }
+    }
+}
+
+function textW() {
+    canvasContext.fillStyle = "white";
+    canvasContext.font = "bold 35px Arial";
+    canvasContext.fillText("YOU WIN!!!", 600, 380);
+}
+
+function drawWin() {
+    canvasContext.clearRect(0, 0, 1257, 760);
+    var serega = new Image();
+    serega.src = "img/blaab.jpg";
+    serega.onload = function () {
+        var win = new Audio();
+        win.src = "sound/obrez.mp3",
+        win.play();
+        canvasContext.drawImage(serega, 0, 0);
+        textW();
+
+    }
+}
+
+function drawLose() {
+    canvasContext.clearRect(0, 0, 1257, 760);
+    var kot = new Image();
+    kot.src = "img/kit.jpg";
+    kot.onload = function () {
+        var loze = new Audio();
+        loze.src = "sound/loze.mp3";
+        loze.play();
+        canvasContext.drawImage(kot, 0, 0);
+        textLose();
+    }
+}
+
+function textLose() {
+    canvasContext.fillStyle = "red";
+    canvasContext.font = "bold 35px Arial";
+    canvasContext.fillText("NICE TRY", 640, 300);
 }
 
 initEventsListeners();
