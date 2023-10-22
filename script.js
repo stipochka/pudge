@@ -156,8 +156,8 @@ function clickmouse(event) {
     HOOK.disX = event.clientX;
     HOOK.disY = event.clientY;
     if (HOOK.dx === 0 && HOOK.dy === 0) {
-        HOOK.dx = Math.round(((HOOK.disX - HOOK.coordX) / (((Math.abs(HOOK.disX - HOOK.coordX)  2) + Math.abs(HOOK.disY - HOOK.coordY)  2)  (1 / 2) / HOOK.height * 4)));
-        HOOK.dy = Math.abs(Math.round(((HOOK.disY - HOOK.coordY) / (((Math.abs(HOOK.disX - HOOK.coordX)  2) + Math.abs(HOOK.disY - HOOK.coordY)  2)  (1 / 2) / HOOK.height * 4))));
+        HOOK.dx = Math.round(((HOOK.disX - HOOK.coordX) / (((Math.abs(HOOK.disX - HOOK.coordX) ** 2) + Math.abs(HOOK.disY - HOOK.coordY) ** 2) ** (1 / 2) / HOOK.height * 4)));
+        HOOK.dy = Math.abs(Math.round(((HOOK.disY - HOOK.coordY) / (((Math.abs(HOOK.disX - HOOK.coordX) ** 2) + Math.abs(HOOK.disY - HOOK.coordY) ** 2) ** (1 / 2) / HOOK.height * 4))));
     }
 }
 
@@ -173,15 +173,15 @@ function removeObject(obj) {
 
 function runningObj() {
     canvasContext.clearRect(0, 0, 1257, 760);
-    if (HOOK.coordX + HOOK.dx > GAME.width  HOOK.coordY + HOOK.dy > GAME.height  HOOK.coordX + HOOK.dx < 0) {
+    if (HOOK.coordX + HOOK.dx > GAME.width || HOOK.coordY + HOOK.dy > GAME.height || HOOK.coordX + HOOK.dx < 0) {
         HOOK.coordX = HOOK.startx;
         HOOK.coordY = HOOK.starty;
         HOOK.dx = 0;
         HOOK.dy = 0;
         draw(HOOK);
     }
-  
-  HOOK.coordX += HOOK.dx;
+
+    HOOK.coordX += HOOK.dx;
     HOOK.coordY += HOOK.dy;
     suma(CREEP);
     suma(CREEP2);
@@ -316,3 +316,5 @@ function textLose() {
 
 initEventsListeners();
 play();
+
+
