@@ -284,7 +284,7 @@ function textW() {
 function drawWin() {
     canvasContext.clearRect(0, 0, 1257, 760);
     var serega = new Image();
-    serega.src = "img/blaab.jpg";
+    serega.src = "img/blaab1.jpg";
     serega.onload = function () {
         var win = new Audio();
         win.src = "sound/obrez.mp3",
