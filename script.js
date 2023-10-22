@@ -168,7 +168,14 @@ function runningCreep() {
     draw(CREEP2);
 }
 
-
+function hpLeft() {
+    canvasContext.fillStyle = "white";
+    canvasContext.font = "bold 16px Arial";
+    canvasContext.fillText("HP left: " + TOWER.HP, 1150, 235);
+    if (TOWER.HP < 1) {
+        GAME.is_game = false
+    } 
+}
 
 function play() {
     runningObj();
