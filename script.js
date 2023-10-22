@@ -64,30 +64,40 @@ var CREEP = {
     height: 120,
     coordX: 0,
     coordY: 250,
-    dx: 5,
+    dx: 3,
     dy: 0,
     starty: 250,
+    startx: 0,
     model: creep,
+    is_dead: false,
 }
 
 var HOOK = {
-    width: 80,
-    height: 80,
-    coordX: 500,
-    coordY: 35,
-    dx: 10,
+    width: 50,
+    height: 50,
+    coordX: 520,
+    coordY: 55,
+    starty: 55,
+    startx: 520,
+    dx: 0,
+    dy: 0,
+    disX: 0,
+    disY: 0,
     model: hook,
+    kiilCount: 0,
 }
 
 var CREEP2 = {
     width: 90,
     height: 90,
-    coordX: 0,
+    coordX: -200,
     coordY: 450,
-    dx: 8,
-    dy: -1,
+    dx: 6,
+    dy: -0.5,
+    startx: 0,
     starty: 450,
     model: creep2,
+    is_dead: false,
 }
 
 var PUDGE = {
@@ -106,9 +116,11 @@ function draw(obj) {
 function suma(obj) {
     obj.coordX += obj.dx;
     obj.coordY += obj.dy
-    if (obj.coordX > GAME.width || obj.coordY > GAME.height) {
-        obj.coordX = 0;
+    if (obj.coordX > 1080) {
+        obj.coordX = obj.startx;
         obj.coordY = obj.starty;
+        TOWER.HP -= 1;
+        console.log(TOWER.HP);
     }
 }
 
